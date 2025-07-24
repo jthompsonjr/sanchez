@@ -1,0 +1,11 @@
+BODY, TH, TD, P, FONT, H1, H2, H3 {font-family : Arial, sans-serif}
+body {background-color:#E8DABD}
+
+A:link {color: #800000;}
+A:visited, A:active {color: #3E0000;}
+
+.tablehead {
+	color: #FFFFFF;
+	font-weight : bold;
+	font-size : smaller;
+}

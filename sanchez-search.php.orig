@@ -1,0 +1,232 @@
+<?php
+/*  Sanchez Search*/
+/*  Sara Somabhatta           */
+
+header ('Content-type: text/html; charset=utf-8');
+require_once('search_functions.php'); ?>
+<html  xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>>George I. Sánchez Papers: Search Results</title><?php include("2nd-header-min.php") ?>
+<link rel=stylesheet type="text/css" href="http://www.lib.utexas.edu/photodraw/sanchez/sanchez.css">
+</head>
+
+<body bgcolor="#E8DABD" link="#3E0000" vlink="#800000">
+
+<?php
+
+
+if (isset($_POST['query'])) {
+        $query = $_POST['query'];
+} elseif (isset($_GET['query'])) {
+        $query = $_GET['query'];
+}
+
+if (isset($query)) {
+        $query = strip_tags($query);
+        $query = stripslashes($query);
+        $query = htmlentities($query, ENT_QUOTES, 'utf-8');
+}
+
+if (strlen($query < 3)) {
+if (isset($_POST['q1'])) {
+        $q1 = $_POST['q1'];
+} elseif (isset($_GET['q1'])) {
+        $q1 = $_GET['q1'];
+}
+
+if (isset($_POST['q2'])) {
+        $q2 = $_POST['q2'];
+} elseif (isset($_GET['q2'])) {
+        $q2 = $_GET['q2'];
+}
+
+if (isset($q1)) {
+        $q1 = strip_tags($q1);
+        $q1 = stripslashes($q1);
+        $q1 = htmlentities($q1, ENT_QUOTES, 'utf-8');
+	$query = $q2.$q1;
+}
+}
+
+?>
+
+<div align="center">
+<table width="90%" border="0" cellpadding=10 cellspacing=10>
+<tr>
+<td colspan="2" align="center">
+<a href="http://www.lib.utexas.edu/photodraw/sanchez/">
+<img src="http://www.lib.utexas.edu/photodraw/sanchez/images/title.gif" width="428" height="53" border="0"alt="Digitization of the George I. Sánchez Papers"></a>
+</td>
+</tr>
+<tr>
+<td width="20%" valign="top">
+<!-- navigation table -->
+<table border="0" cellspacing="0" cellpadding="2" bgcolor="#65372F">
+ <tr>
+  <td>
+<table bgcolor="#E8DABD" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td colspan="2" bgcolor="#65372F">
+   <span class="tablehead">&nbsp;list by</span>
+  </td>
+ </tr>
+ <tr>
+  <td rowspan="2"><img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="10" height="4" border="0"></td>
+  <td><img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="1" height="4" border="0"></td>
+ </tr>
+ <tr>
+  <td bgcolor="#E8DABD">
+   <font size="-1">&nbsp;<a href="http://www.lib.utexas.edu/photodraw/sanchez/subject.html">subject</a><br>
+   &nbsp;<a href="http://www.lib.utexas.edu/photodraw/sanchez/location.html">location</a><br>
+   &nbsp;<a href="http://www.lib.utexas.edu/photodraw/sanchez/title.html">title</a><br>&nbsp;</font>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="2" bgcolor="#65372F">
+  <img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="1" height="2" border="0"><br>
+  <span class="tablehead">&nbsp;keyword search</span><br>
+  </td>
+ </tr>
+ <tr>
+<td rowspan="3"><img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="1" height="4" border="0"></td>
+<td><img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="1" height="6" border="0"></td>
+</tr>
+<tr><td bgcolor="#E8DABD"><font size="-1">
+
+
+<form name="queryForm" method="GET" accept-charset="UTF-8">
+<input name="start" type="hidden" value="0">
+<input name="q1" size="15" value=""/>&nbsp;<br />
+<input type="radio" name="q2" value="" checked>all categories<br>
+<input type="radio" name="q2" value="dc_subject:">subject/keywords<br>
+<input type="radio" name="q2" value="dc_description:">annotation<br>
+<input type="radio" name="q2" value="title:">title<br>
+<input type="radio" name="q2" value="dc_placename:">location<br>
+<img src="http://www.lib.utexas.edu/photodraw/sanchez/images/space.gif" alt="" width="1" height="4" border="0"><br>
+<input type="submit"  value="begin search" >&nbsp;&nbsp;&nbsp;
+</form>
+</font></td></tr>
+</table>
+</td></tr></table>
+<a href="http://www.lib.utexas.edu/photodraw/sanchez/index.html"><font size="-1">back to the intro</font></a>
+<!-- /navigation table -->
+
+</td>
+<td valign="top" align="left">
+
+<?php
+
+
+$rows = isset($_REQUEST['rows']) ? intval($_REQUEST['rows']) : 25;
+$start = isset($_REQUEST['start']) ? intval($_REQUEST['start']) : 0;
+
+
+$results = false;
+
+if ($query)
+{
+
+/* Domain name of the Solr server */
+define('SOLR_SERVER_HOSTNAME', 'solr.lib.utexas.edu');           
+define('SOLR_SERVER_PATH', '/sanchez');     
+
+/* Whether or not to run in secure mode */
+define('SOLR_SECURE', false );
+
+/* HTTP Port to connection */
+define('SOLR_SERVER_PORT', ((SOLR_SECURE) ? 80 : 80));
+
+define('SOLR_SERVER_TIMEOUT', 25);
+
+$options = array
+(
+    'hostname' => SOLR_SERVER_HOSTNAME,
+    'port' => SOLR_SERVER_PORT,
+    'secure'   => SOLR_SECURE,
+    'timeout'  => SOLR_SERVER_TIMEOUT,
+    'path' => SOLR_SERVER_PATH
+    
+);
+
+$client = new SolrClient($options);
+
+$newquery = new SolrQuery();
+$newquery->setQuery($query);
+$newquery->setStart($start);
+$newquery->setRows($rows);
+
+$newquery->setHighlight(true);
+$newquery->setHighlightUsePhraseHighlighter(true);
+$newquery->setHighlightMaxAnalyzedChars(10000);
+$newquery->setHighlightFragsize(300);
+$newquery->setHighlightSimplePre('<strong>');
+$newquery->setHighlightSimplePost('</strong>');
+
+
+$query_response = $client->query($newquery);
+
+$results = $query_response->getResponse();
+
+?>
+<?php
+// display results
+if ($results)
+{
+  $totalhits = (int) $results->response->numFound;
+  $end = min($start + $rows, $totalhits);
+  $begin = $start + 1;
+  // iterate result documents
+
+$docs = $results->response->docs;
+$size = sizeOf($docs);
+print "<h3>Search Results</h3>";
+print "Your search for the word(s), <em>$query</em>, found <b>$totalhits</b> photographs. <br />";
+
+if ($size > 1) {
+
+print "Photographs $begin through $end presented here </h4>";
+
+
+
+ for ($i=0; $i<$size; $i++)
+  { 
+    // iterate document fields / values
+	$startnum = $start + $i + 1;
+        $title = $docs[$i][title];
+        $url = $docs[$i][url];
+        $id = $docs[$i][id];
+	$highlightSnippets = $results->highlighting[$id][content][0];
+
+print "<table  cellspacing=\"1\" width=\"100%\">";
+print  "<tr valign=\"top\">";
+print "<td width=\"10%\" rowspan=2>";
+print "<font size=-1 face=\"arial\">";
+print "<b>$startnum.</b>";
+print "</font></td>";
+print "<td width=\"90%\">";
+print "<font size=-1 face=\"arial\">";
+print "<a href=\"$url\">$title</a> <br />";
+print "</font>";
+print "</td>";
+print "</tr>";
+
+}
+print "</table>";
+print "<center>";
+print "<br />";
+ search_paginate($start, $totalhits, $rows, $query);
+print "</center>";
+
+
+
+}
+}
+}
+?>
+</table>
+</div>
+
+</body>
+</html>
+

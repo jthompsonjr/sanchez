@@ -1,0 +1,1 @@
+/usr/bin/java -Xbootclasspath/p:/home/taro/xalan/xalan2.4/bin/xalan.jar:/home/taro/xalan/xalan2.4/bin/xercesImpl.jar:/home/taro/xalan/xalan2.4/bin/xml-apis.jar org.apache.xalan.xslt.Process -IN sanchez.xml -XSL sanchez.xsl -HTML

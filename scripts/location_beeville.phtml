@@ -1,0 +1,101 @@
+<html>
+<head>
+<title>George I. Sánchez: Location</title><?php include("2nd-header-min.php") ?>
+<link rel=stylesheet type="text/css" href="sanchez.css">
+</head>
+<body bgcolor="#E8DABD" link="#3E0000" vlink="#800000">
+
+<div align="center">
+<table width="90%" border="0" cellspacing="10" cellpadding="10">
+<tr>
+<td colspan="2" align="center">
+<a href="index.html"><img src="images/title.gif" width="428" height="53" border="0" alt="Digitization of the
+Photographs from the George I Sánchez Papers"></a>
+</td></tr>
+<tr>
+<td width="20%" valign="top">
+
+<!-- navigation table --> 
+<table border="0" cellspacing="0" cellpadding="2" bgcolor="#65372F"><tr><td>
+<table bgcolor="#E8DABD" border="0" cellspacing="0" cellpadding="0">
+<tr><td colspan="2" bgcolor="#65372F">
+<span class="tablehead">&nbsp;list by</span></td></tr>
+<tr>
+<td rowspan="2"><img src="images/space.gif" alt="" width="10" height="4" border="0"></td>
+<td><img src="images/space.gif" alt="" width="1" height="4" border="0"></td>
+</tr>
+<tr><td bgcolor="#E8DABD">
+<font size="-1">&nbsp;<a href="subject.html">subject</a><br>
+&nbsp;<a href="location.html">location</a><br>
+&nbsp;<a href="title.html">title</a><br>&nbsp;
+</font></td></tr>
+<tr><td colspan="2" bgcolor="#65372F"><img src="images/space.gif" alt="" width="1" height="2" border="0"><br>
+<span class="tablehead">&nbsp;keyword search</span><br>
+</td></tr>
+<tr>
+<td rowspan="3"><img src="images/space.gif" alt="" width="1" height="4" border="0"></td>
+<td><img src="images/space.gif" alt="" width="1" height="6" border="0"></td>
+</tr>  
+<tr><td bgcolor="#E8DABD"><font size="-1">
+<form action="" method="post">
+<input type="text" name="keyword" size="15">&nbsp;<br>
+<input type="radio" name="search_type" value="all" checked>all categories<br>
+<input type="radio" name="search_type" value="subject/keywords">subject/keywords<br>
+<input type="radio" name="search_type" value="annotation">annotation<br>
+<input type="radio" name="search_type" value="title">title<br>
+<input type="radio" name="search_type" value="location">location<br>
+<img src="images/space.gif" alt="" width="1" height="4" border="0"><br>
+<input type="button" name="begin search" value="begin search" onClick="location.href='search_results.html'">&nbsp;&nbsp;&nbsp;
+</form>
+</font></td></tr>
+</table>
+</td></tr></table>
+<a href="index.html"><font size="-1">back to the intro</font></a>
+<!-- /navigation table -->
+
+</td>
+<td valign="top" align="left">
+<h2>Location</h2>
+
+<h3>Beeville, Texas</h3>
+
+<!-- location results -->
+<ol>
+<?php
+
+$ds=ldap_connect("ldap.lib.utexas.edu");
+
+if ($ds) {
+
+        $base = "cn=sanchez,cn=utlol,cn=urn";
+        $ldap_filter = "(&(objectclass=*)(cn=san*)(dccoverageplacenamecity=Beeville))";
+        $justthese = array("cn", "dctitle", "dccoverageplacenamecity");
+
+        $results = @ldap_search($ds, $base, $ldap_filter, $justthese);
+        $entries = @ldap_count_entries($ds, $results);
+
+        $info = @ldap_get_entries($ds, $results);
+
+        for ($i = 0; $i < $info["count"]; $i++) {
+                $dn = $info[$i]["dn"];
+                $cn = ldap_explode_dn($dn, 1);
+
+                        echo "<li><a href=raw/$cn[0].html>".$info[$i]["dctitle"][0]."</a>";
+
+        }
+
+ldap_close($ds);
+        
+} //if $ds
+        
+?>
+</ol>
+<!-- /location results -->
+
+</td></tr>
+
+</table>
+</div>  
+
+</body>
+</html>

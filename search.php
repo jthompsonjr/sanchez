@@ -1,0 +1,49 @@
+<!-- navigation table -->
+<table border="0" cellspacing="0" cellpadding="2" bgcolor="#65372F">
+ <tr>
+  <td> 
+<table bgcolor="#E8DABD" border="0" cellspacing="0" cellpadding="0">
+ <tr>
+  <td colspan="2" bgcolor="#65372F">
+   <span class="tablehead">&nbsp;list by</span>
+  </td>
+ </tr>
+ <tr>
+  <td rowspan="2"><img src="images/space.gif" alt="" width="10" height="4" border="0"></td>
+  <td><img src="images/space.gif" alt="" width="1" height="4" border="0"></td>
+ </tr> 
+ <tr>
+  <td bgcolor="#E8DABD" align="left">
+   <font size="-1">&nbsp;<a href="http://legacy.lib.utexas.edu/photodraw/sanchez/subject.html">subject</a><br>
+   &nbsp;<a href="http://legacy.lib.utexas.edu/photodraw/sanchez/location.html">location</a><br>
+   &nbsp;<a href="http://legacy.lib.utexas.edu/photodraw/sanchez/title.html">title</a><br>&nbsp;</font>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="2" bgcolor="#65372F">
+  <img src="images/space.gif" alt="" width="1" height="2" border="0"><br>
+  <span class="tablehead">&nbsp;keyword search</span><br>
+  </td>
+ </tr>
+ <tr>
+<td rowspan="3"><img src="images/space.gif" alt="" width="1" height="4" border="0"></td>
+<td><img src="images/space.gif" alt="" width="1" height="6" border="0"></td>
+</tr> 
+<tr><td bgcolor="#E8DABD" align="left"><font size="-1">
+  
+<form method="get" action="sanchez-search.php">
+<input name="query" size=15 maxlength=512 title="search box">&nbsp;<br>
+<input type="radio" name="q2" title="all categories" value="" checked>all categories<br>
+<input type="radio" name="q2" title="subject - keywords" value="dc.subject:">subject/keywords<br>
+<input type="radio" name="q2" title="annotation" value="dc.description:">annotation<br>
+<input type="radio" name="q2" title="title" value="dc.title:">title<br>
+<input type="radio" name="q2" title="location" value="dc.coverage.placename:">location<br>
+<img src="images/space.gif" alt="" width="1" height="4" border="0"><br>
+<input type="submit"  value="begin search" >&nbsp;&nbsp;&nbsp;
+</form>
+
+</font></td></tr>
+</table>
+</td></tr></table>
+<a href="http://legacy.lib.utexas.edu/photodraw/sanchez/index.html"><font size="-1">back to the intro</font></a>
+<!-- /navigation table -->
